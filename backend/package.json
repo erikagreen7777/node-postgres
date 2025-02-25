@@ -1,0 +1,23 @@
+{
+  "name": "node-postgres",
+  "version": "1.0.0",
+  "description": "NodeJS server for postgres",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erikagreen7777/node-postgres.git"
+  },
+  "author": "ErikaGreen7777",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erikagreen7777/node-postgres/issues"
+  },
+  "homepage": "https://github.com/erikagreen7777/node-postgres#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.3"
+  }
+}
