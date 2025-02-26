@@ -2,14 +2,16 @@ require("dotenv").config();
 const fs = require("fs");
 const https = require("https");
 const express = require("express");
+const ssl_key = "certs/localhost.key";
+const ssl_cert = "certs/localhost.crt";
 
 const app = express();
 const port = 3001;
 
 // Load SSL certificate
 const options = {
-  key: fs.readFileSync(process.env.SSL_KEY),
-  cert: fs.readFileSync(process.env.SSL_CERT),
+  key: fs.readFileSync(ssl_key, "utf-8"),
+  cert: fs.readFileSync(ssl_cert, "utf-8"),
 };
 
 // Middleware
@@ -31,6 +33,10 @@ const createUser = require("./routes/createUser");
 const getUsers = require("./routes/getUsers");
 const deleteUser = require("./routes/deleteUser");
 const updateUser = require("./routes/updateUser");
+
+app.get("/", (req, res) => {
+  res.status(200).send("Hello World!");
+});
 
 app.get("/users", (req, res) => {
   getUsers()
