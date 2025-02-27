@@ -1,5 +1,5 @@
 # README
 
-To start the node server, use `node index.js`
+To start the node server, use `npx nodemon index.js`
 
-Whenever changes are made to the backend, make sure you restart the server (see 👆) to apply changes.
+`Nodemon` is installed so it'll track any changes and automatically apply them so you don't have to restart the server.
