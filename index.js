@@ -33,14 +33,22 @@ const createUser = require("./routes/createUser");
 const getUsers = require("./routes/getUsers");
 const deleteUser = require("./routes/deleteUser");
 const updateUser = require("./routes/updateUser");
+const userExists = require("./routes/userExists");
 
 app.get("/", (req, res) => {
+  console.log("Request received at /");
   res.status(200).send("Hello World!");
+});
+
+app.get("/userExists", (req, res) => {
+  userExists(req.query.email)
+    .then((response) => res.status(200).send(response))
+    .catch((error) => res.status(500).send(error));
 });
 
 app.get("/users", (req, res) => {
   getUsers()
-    .then((testUsers) => res.status(200).send(testUsers))
+    .then((response) => res.status(200).send(response))
     .catch((error) => res.status(500).send(error));
 });
 
