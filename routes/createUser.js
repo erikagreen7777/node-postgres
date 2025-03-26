@@ -2,10 +2,11 @@ const pool = require("../db/mealMinderModel");
 
 const createUser = (body) => {
   return new Promise(function (resolve, reject) {
-    const { first_name, last_name, email } = body;
+    const { first_name, last_name, email, password } = body;
+    // salt and ecrypt password
     pool.query(
-      "INSERT INTO users (first_name, last_name, email) VALUES ($1, $2, $3) RETURNING *",
-      [first_name, last_name, email],
+      "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
+      [first_name, last_name, email, password],
       (error, results) => {
         if (error) {
           reject(error);
