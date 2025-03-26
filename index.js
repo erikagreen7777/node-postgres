@@ -36,7 +36,6 @@ const updateUser = require("./routes/updateUser");
 const userExists = require("./routes/userExists");
 
 app.get("/", (req, res) => {
-  console.log("Request received at /");
   res.status(200).send("Hello World!");
 });
 

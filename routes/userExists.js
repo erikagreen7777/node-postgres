@@ -13,13 +13,13 @@ const userExists = async (userEmail) => {
           if (results && results.rows) {
             resolve(results.rows);
           } else {
-            reject(new Error("No results found"));
+            resolve();
           }
         }
       );
     });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     throw new Error("Internal server error");
   }
 };
