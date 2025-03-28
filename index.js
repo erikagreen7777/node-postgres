@@ -4,6 +4,7 @@ const https = require("https");
 const express = require("express");
 const ssl_key = "certs/localhost.key";
 const ssl_cert = "certs/localhost.crt";
+const mm_model = require("./db/mealMinderModel");
 
 const app = express();
 const port = process.env.PORT ?? 3001;
@@ -35,6 +36,8 @@ const deleteUser = require("./routes/deleteUser");
 const updateUser = require("./routes/updateUser");
 const userExists = require("./routes/userExists");
 
+// TODO: Is there a way to not have to repeat the same code in each route?
+
 app.get("/", (req, res) => {
   res.status(200).send("Hello World!");
 });
@@ -51,10 +54,12 @@ app.get("/users", (req, res) => {
     .catch((error) => res.status(500).send(error));
 });
 
-app.post("/users", (req, res) => {
+app.post("/createUser", (req, res) => {
   createUser(req.body)
     .then((response) => res.status(200).send(response))
-    .catch((error) => res.status(500).send(error));
+    .catch((error) =>
+      res.status(error.status || 500).send(error.message || "An error occurred")
+    );
 });
 
 app.delete("/users/:id", (req, res) => {
