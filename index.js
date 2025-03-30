@@ -5,6 +5,8 @@ const express = require("express");
 const ssl_key = "certs/localhost.key";
 const ssl_cert = "certs/localhost.crt";
 const mm_model = require("./db/mealMinderModel");
+const session = require("express-session");
+const requireAuth = require("./routes/requireAuth");
 
 const app = express();
 const port = process.env.PORT ?? 3001;
@@ -17,6 +19,14 @@ const options = {
 
 // Middleware
 app.use(express.json());
+app.use(
+  session({
+    secret: "my-secret-key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
 
 // CORS Headers
 app.use(function (req, res, next) {
@@ -42,6 +52,19 @@ const authenticateUser = require("./routes/authenticateUser");
 app.get("/", (req, res) => {
   res.status(200).send("Hello World!");
 });
+
+// app.get("/dashboard", requireAuth, (req, res) => {
+//   res.render("https://localhost:3000/dashboard")
+// });
+
+// app.post("/login", (req, res) => {
+//   if (validCredentials) {
+//     req.session.userId = userId; // Set session identifier
+//     res.redirect("https://localhost:3000/dashboard");
+//   } else {
+//     res.render("login", { error: "Invalid username or password" });
+//   }
+// });
 
 app.get("/userExists", (req, res) => {
   userExists(req.query.email)
