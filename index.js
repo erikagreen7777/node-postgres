@@ -35,6 +35,7 @@ const getUsers = require("./routes/getUsers");
 const deleteUser = require("./routes/deleteUser");
 const updateUser = require("./routes/updateUser");
 const userExists = require("./routes/userExists");
+const authenticateUser = require("./routes/authenticateUser");
 
 // TODO: Is there a way to not have to repeat the same code in each route?
 
@@ -46,6 +47,16 @@ app.get("/userExists", (req, res) => {
   userExists(req.query.email)
     .then((response) => res.status(200).send(response))
     .catch((error) => res.status(500).send(error));
+});
+
+app.post("/authenticateUser", (req, res) => {
+  authenticateUser(req.body)
+    .then((response) => res.status(200).send(response))
+    .catch((error) =>
+      res
+        .status(error.status || 500)
+        .send(error.message || "Authentication failed")
+    );
 });
 
 app.get("/users", (req, res) => {

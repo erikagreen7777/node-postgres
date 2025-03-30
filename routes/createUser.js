@@ -7,12 +7,10 @@ const createUser = async (body) => {
   try {
     return await new Promise(function (resolve, reject) {
       const { firstName, lastName, email, password } = body;
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(password, salt);
-      const hashedPassword = hash;
+      const hashedPassword = bcrypt.hashSync(password, 10);
       pool.query(
-        "INSERT INTO users (first_name, last_name, email, salt, password) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [firstName, lastName, email, salt, hashedPassword],
+        "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
+        [firstName, lastName, email, hashedPassword],
         (error, results) => {
           if (error) {
             console.log(`Error: ${error}`);
