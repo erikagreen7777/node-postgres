@@ -14,10 +14,9 @@ const authenticateUser = async (userData) => {
           }
           if (results && results.rows) {
             const hashedPassword = results.rows[0].password;
-            const isMatch = bcrypt.compareSync(enteredPassword, hashedPassword);
-
+            let isMatch = bcrypt.compareSync(enteredPassword, hashedPassword);
             if (isMatch) {
-              resolve({ isMatch });
+              resolve(isMatch);
             } else {
               reject(new Error("Invalid credentials"));
             }

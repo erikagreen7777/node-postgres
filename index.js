@@ -7,6 +7,7 @@ const ssl_cert = "certs/localhost.crt";
 const mm_model = require("./db/mealMinderModel");
 const session = require("express-session");
 const requireAuth = require("./routes/requireAuth");
+// const MongoStore = require('connect-mongo')(session);
 
 const app = express();
 const port = process.env.PORT ?? 3001;
@@ -24,7 +25,17 @@ app.use(
     secret: "my-secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    cookie: {
+      secure: true,
+      maxAge: 3600000,
+      //  httpOnly: true, // Prevent client-side access to cookies
+      //  sameSite: 'strict'  // Mitigate CSRF attacks
+      //   store: new MongoStore(
+      //     {
+      //         url: 'mongodb://localhost/session-store'
+      //     }
+      // )
+    },
   })
 );
 
@@ -54,17 +65,55 @@ app.get("/", (req, res) => {
 });
 
 // app.get("/dashboard", requireAuth, (req, res) => {
-//   res.render("https://localhost:3000/dashboard")
+//   res.redirect("https://localhost:3000/dashboard");
 // });
 
-// app.post("/login", (req, res) => {
-//   if (validCredentials) {
-//     req.session.userId = userId; // Set session identifier
-//     res.redirect("https://localhost:3000/dashboard");
+// Middleware to log session data
+app.use((req, res, next) => {
+  // console.log("Session:", req.session);
+  next();
+});
+
+// Route to get session data
+app.get("/get-session", (req, res) => {
+  if (req.session.user) {
+    res.send("Session data: " + JSON.stringify(req.session.user));
+  } else {
+    res.send("No session data found");
+  }
+});
+
+// app.post("/login", (request, response) => {
+//   const getUserById = userExists(request.body.email);
+//   console.log("getUserById", userExists);
+//   if (getUserById) {
+//     const userId = getUserById[0].id;
+//     console.log("userId", userId);
+//     request.session.userId = userId; // Set session identifier
+//     response.redirect("https://localhost:3000/dashboard");
 //   } else {
-//     res.render("login", { error: "Invalid username or password" });
+//     response.render("login", { error: "Invalid username or password" });
 //   }
 // });
+
+app.get("/profile", (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "User not logged in" });
+  }
+  res.json({ message: `Welcome ${req.session.user.email}` });
+});
+
+app.get("/logout", (req, res) => {
+  // Destroy session
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error logging out");
+    } else {
+      res.send("Logged out");
+    }
+  });
+});
 
 app.get("/userExists", (req, res) => {
   userExists(req.query.email)
