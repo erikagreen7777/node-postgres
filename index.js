@@ -64,9 +64,13 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello World!");
 });
 
-// app.get("/dashboard", requireAuth, (req, res) => {
-//   res.redirect("https://localhost:3000/dashboard");
-// });
+app.get("/dashboard", (req, res) => {
+  if (req.session.userId) {
+    res.json({ message: `Welcome ${req.session.user.email}` });
+  } else {
+    res.send("No session data found");
+  }
+});
 
 // Middleware to log session data
 app.use((req, res, next) => {
@@ -83,18 +87,18 @@ app.get("/get-session", (req, res) => {
   }
 });
 
-// app.post("/login", (request, response) => {
-//   const getUserById = userExists(request.body.email);
-//   console.log("getUserById", userExists);
-//   if (getUserById) {
-//     const userId = getUserById[0].id;
-//     console.log("userId", userId);
-//     request.session.userId = userId; // Set session identifier
-//     response.redirect("https://localhost:3000/dashboard");
-//   } else {
-//     response.render("login", { error: "Invalid username or password" });
-//   }
-// });
+app.post("/hi", async (request, response) => {
+  const getUserById = await userExists(request.body.email);
+  const user = getUserById[0];
+  if (getUserById) {
+    const userId = user.id;
+    request.session.userId = userId; // Set session identifier
+    request.session.email = request.body.email;
+    response.redirect("https://localhost:3000/dashboard");
+  } else {
+    response.render("login", { error: "Invalid username or password" });
+  }
+});
 
 app.get("/profile", (req, res) => {
   if (!req.session.user) {
