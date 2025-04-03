@@ -6,7 +6,7 @@ const authenticateUser = async (userData) => {
   try {
     return await new Promise(function (resolve, reject) {
       pool.query(
-        "SELECT password FROM users WHERE email = $1",
+        "SELECT password, id FROM users WHERE email = $1",
         [email],
         (error, results) => {
           if (error) {
@@ -14,9 +14,9 @@ const authenticateUser = async (userData) => {
           }
           if (results && results.rows) {
             const hashedPassword = results.rows[0].password;
+            const id = results.rows[0].id;
             let isMatch = bcrypt.compareSync(enteredPassword, hashedPassword);
-            // console.log(isMatch);
-            resolve(isMatch);
+            isMatch ? resolve({ email, id }) : reject("not found");
           }
         }
       );
