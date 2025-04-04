@@ -73,9 +73,12 @@ app.get("/dashboard", (req, res) => {
   }
 });
 
-app.get("/get-session", (req, res) => {
-  console.log("Session data:", req.session);
-  res.json(req.session);
+app.get("/auth-status", (req, res) => {
+  if (req.session.userId) {
+    res.json({ isAuthenticated: true, email: req.session.email });
+  } else {
+    res.status(401).json({ isAuthenticated: false });
+  }
 });
 
 app.post("/login", async (req, res) => {
@@ -87,46 +90,22 @@ app.post("/login", async (req, res) => {
     req.session.userId = userRecord.id;
     req.session.email = userRecord.email;
     res.redirect("/dashboard");
-
-    // res.redirect("/dashboard");
   } catch (error) {
     res.status(500).json({ error: "Authentication failed" });
   }
 });
 
-// app.post("/set-session", async (request, response) => {
-//   const getUserById = await userExists(request.body.email);
-//   const user = getUserById[0];
-//   if (getUserById) {
-//     const userId = user.id;
-//     request.session.userId = userId; // Set session identifier
-//     request.session.email = request.body.email;
-//     console.log("request", JSON.stringify(request.session));
-//     response.send({ response: request.session });
-//     response.redirect("/dashboard");
-//   } else {
-//     response.render("login", { error: "Invalid username or password" });
-//   }
-// });
-
-// app.get("/profile", (req, res) => {
-//   if (!req.session.user) {
-//     return res.status(401).json({ error: "User not logged in" });
-//   }
-//   res.json({ message: `Welcome ${req.session.user.email}` });
-// });
-
-// app.get("/logout", (req, res) => {
-//   // Destroy session
-//   req.session.destroy((err) => {
-//     if (err) {
-//       console.error(err);
-//       res.status(500).send("Error logging out");
-//     } else {
-//       res.send("Logged out");
-//     }
-//   });
-// });
+app.get("/logout", (req, res) => {
+  // Destroy session
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error logging out");
+    } else {
+      res.send("Logged out");
+    }
+  });
+});
 
 app.get("/userExists", (req, res) => {
   userExists(req.query.email)
