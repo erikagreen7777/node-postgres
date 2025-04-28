@@ -2,7 +2,7 @@ const pool = require("../db/mealMinderModel");
 const bcrypt = require("bcrypt");
 
 const authenticateUser = async (userData) => {
-  const { email, password: enteredPassword } = userData;
+  const { email, password } = userData;
   try {
     return await new Promise(function (resolve, reject) {
       pool.query(
@@ -15,8 +15,13 @@ const authenticateUser = async (userData) => {
           if (results && results.rows) {
             const hashedPassword = results.rows[0].password;
             const id = results.rows[0].id;
-            let isMatch = bcrypt.compareSync(enteredPassword, hashedPassword);
-            isMatch ? resolve({ email, id }) : reject("not found");
+            let isMatch = bcrypt.compareSync(password, hashedPassword);
+            console.log("isMatch", isMatch);
+            isMatch
+              ? resolve({ email, id })
+              : reject("Invalid email or password");
+            // ? resolve(true)
+            // : reject(false);
           }
         }
       );

@@ -103,6 +103,7 @@ app.get("/logout", (req, res) => {
       res.status(500).send("Error logging out");
     } else {
       res.send("Logged out");
+      redirect("/");
     }
   });
 });
