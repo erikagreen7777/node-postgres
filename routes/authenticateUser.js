@@ -16,12 +16,9 @@ const authenticateUser = async (userData) => {
             const hashedPassword = results.rows[0].password;
             const id = results.rows[0].id;
             let isMatch = bcrypt.compareSync(password, hashedPassword);
-            console.log("isMatch", isMatch);
             isMatch
               ? resolve({ email, id })
               : reject("Invalid email or password");
-            // ? resolve(true)
-            // : reject(false);
           }
         }
       );
