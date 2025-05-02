@@ -1,4 +1,4 @@
-const pool = require("../db/mealMinderModel");
+const pool = require("../../db/mealMinderModel");
 const bcrypt = require("bcrypt");
 
 const authenticateUser = async (userData) => {

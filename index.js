@@ -6,7 +6,7 @@ const ssl_key = "certs/localhost.key";
 const ssl_cert = "certs/localhost.crt";
 const mm_model = require("./db/mealMinderModel");
 const session = require("express-session");
-const requireAuth = require("./routes/requireAuth");
+const requireAuth = require("./routes/users/requireAuth");
 // const MongoStore = require('connect-mongo')(session);
 
 const app = express();
@@ -51,12 +51,12 @@ app.use(function (req, res, next) {
 });
 
 // Routes
-const createUser = require("./routes/createUser");
-const getUsers = require("./routes/getUsers");
-const deleteUser = require("./routes/deleteUser");
-const updateUser = require("./routes/updateUser");
-const userExists = require("./routes/userExists");
-const authenticateUser = require("./routes/authenticateUser");
+const createUser = require("./routes/users/createUser");
+const getUsers = require("./routes/users/getUsers");
+const deleteUser = require("./routes/users/deleteUser");
+const updateUser = require("./routes/users/updateUser");
+const userExists = require("./routes/users/userExists");
+const authenticateUser = require("./routes/users/authenticateUser");
 
 // TODO: Is there a way to not have to repeat the same code in each route?
 

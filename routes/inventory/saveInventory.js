@@ -1,15 +1,15 @@
-const pool = require("../db/mealMinderModel");
+const pool = require("../../db/mealMinderModel");
 const bcrypt = require("bcrypt");
 
-// TODO: add further email, firstname, lastname, and password validation?
+// TODO: finish hooking it up
 
-const createUser = async (body) => {
+const saveInventory = async (body) => {
   try {
     return await new Promise(function (resolve, reject) {
       const { firstName, lastName, email, password } = body;
       const hashedPassword = bcrypt.hashSync(password, 10);
       pool.query(
-        "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
+        "INSERT INTO products (name, product_quantity, carbohydrates_serving, calcium_serving) VALUES ($1, $2, $3, $4) RETURNING *",
         [firstName, lastName, email, hashedPassword],
         (error, results) => {
           if (error) {

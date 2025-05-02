@@ -1,4 +1,4 @@
-const pool = require("../db/mealMinderModel");
+const pool = require("../../db/mealMinderModel");
 
 const userExists = async (userEmail) => {
   try {

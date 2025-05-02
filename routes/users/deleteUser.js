@@ -1,4 +1,4 @@
-const pool = require("../db/mealMinderModel");
+const pool = require("../../db/mealMinderModel");
 
 const deleteUser = (id) => {
   return new Promise(function (resolve, reject) {
